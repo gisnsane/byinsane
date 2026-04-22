@@ -1,0 +1,67 @@
+/* ============================================================
+   GLOBAL.CSS — Variables de color globales
+   Importa este archivo PRIMERO en cada HTML de tu proyecto
+   ============================================================ */
+
+:root {
+
+ --font-logo:  700;   /* Bold */
+  --font-title: 400;   /* Bold */
+    
+  /* ─── FONDOS ─────────────────────────────────────────── */
+  --bg-dark:          #050505;   /* fondo principal oscuro (body, nav, viewer, sections) */
+  --bg-main-light:    #ffffff;   /* fondo sección biography (.main) */
+  --bg-nav-border:    #111111;   /* borde derecho del sidenav */
+
+  /* ─── TEXTOS ─────────────────────────────────────────── */
+  --color-logo:     hsl(54, 100%, 53%);   /* texto logos y cruz */
+  --text-primary:     #ffffff;   /* texto principal sobre fondos oscuros */
+  --text-dark:        #000000;   /* texto sobre fondos claros (biography) */
+  --text-body:        #222222;   /* cuerpo de texto en biography */
+  --text-muted-1:     #888888;   /* descripción hero, info lateral */
+  --text-muted-2:     #777777;   /* subtítulos de sección, viewer-text p */
+  --text-muted-3:     #666666;   /* links del nav sin hover */
+  --text-muted-4:     #aaaaaa;   /* viewer-text color base */
+
+  /* ─── BORDES / LÍNEAS ─────────────────────────────────── */
+  --border-subtle:    #111111;   /* borde sidenav */
+  --border-field:     #1a1a1a;   /* línea inferior de campos del form */
+  --border-btn:       #222222;   /* borde botón enviar (estado normal) */
+
+  /* ─── LABELS / ÍCONOS ────────────────────────────────── */
+  --label-inactive:   #444444;   /* labels de campos, info-label */
+
+  /* ─── SCROLLBAR ──────────────────────────────────────── */
+  --scrollbar-thumb:          rgba(255, 255, 255, 0.10);
+  --scrollbar-thumb-hover:    rgba(255, 255, 255, 0.25);
+
+  /* ─── OVERLAYS / TRANSPARENCIAS ──────────────────────── */
+  --overlay-gradient:         rgba(0, 0, 0, 0.60);   /* gradiente hover sobre .project */
+  --overlay-zoom-bg:          rgba(0, 0, 0, 0.92);   /* fondo zoom-overlay */
+  --overlay-viewer-btn-bg:    rgba(255, 255, 255, 0.06);
+  --overlay-viewer-btn-hover: rgba(255, 255, 255, 0.12);
+  --overlay-btn-hover-bg:     rgba(255, 255, 255, 0.04); /* hover botón enviar */
+
+  /* ─── ESTADO DE FORMULARIO ───────────────────────────── */
+  --form-success:     #aaaaaa;   /* mensaje enviado con éxito */
+  --form-error:       #c0392b;   /* mensaje de error */
+
+  /* ─── GRILLA DE FONDO (hero grid) ───────────────────── */
+  --hero-grid-color:  #111111;   /* líneas decorativas del hero */
+
+}
+
+
+/* ============================================================
+   CÓMO CAMBIAR EL TEMA DE COLOR
+
+   Solo edita las variables de arriba en :root y todos
+   los archivos que usen este global.css se actualizarán.
+
+   Ejemplo para un tema claro:
+   :root {
+     --bg-dark:       #f5f5f5;
+     --text-primary:  #000000;
+     ...
+   }
+============================================================ */

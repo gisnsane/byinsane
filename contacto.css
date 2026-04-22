@@ -1,0 +1,344 @@
+/* =========================
+   BASE DE SECCIÓN
+========================= */
+.logo{
+  margin-bottom:10px;
+}
+
+.nav-top{
+  display:flex;
+  flex-direction:column;
+  align-items:flex-start;
+  gap:20px;
+}
+
+.menu-toggle{
+  background:none;
+  border:none;
+  cursor:pointer;
+  display:flex;
+  flex-direction:column;
+  gap:5px;
+}
+
+.menu-toggle span{
+  width:16px;
+  height:1px;
+  background: var(--color-logo);
+  display:block;
+}
+
+/* 👉 activar contenedor en biografía */
+.sidenav .nav-links{
+  opacity:1 !important;
+  transform:translateY(0) !important;
+  pointer-events:auto !important;
+}
+
+.nav-links{
+  list-style:none;
+  display:flex;
+  flex-direction:column;
+  gap:25px;
+  margin-top:40px;
+}
+
+/* ocultar items */
+.nav-links li{
+  opacity:0;
+  transform:translateY(-10px);
+  pointer-events:none;
+  transition:0.3s;
+}
+
+/* nav abierto */
+.sidenav.active .nav-links li{
+  opacity:1;
+  transform:translateY(0);
+  pointer-events:auto;
+}
+
+/* excepción: biografía visible */
+.nav-links li.always-visible{
+  opacity:1;
+  transform:translateY(0);
+  pointer-events:auto;
+}
+
+.sidenav.active .nav-links{
+  opacity:1;
+  transform:translateY(0);
+  pointer-events:auto;
+}
+
+.main{
+  margin-left:220px; /* respeta tu nav */
+}
+
+/* =========================
+   SECCIÓN CONTACTO
+========================= */
+
+.contact{
+  padding: 120px 80px;
+  background: var(--bg-dark);
+  min-height: 100vh;
+}
+
+/* =========================
+   INTRO
+========================= */
+
+.contact-intro{
+  margin-bottom: 80px;
+}
+
+.contact-intro h1{
+  font-size: 14px;
+  letter-spacing: 4px;
+  color: var(--text-primary);
+  opacity: 0.7;
+  font-weight: 400;
+  margin-bottom: 10px;
+}
+
+.contact-intro p{
+  font-size: 13px;
+  color: var(--text-muted-2);
+  letter-spacing: 1px;
+  line-height: 1.6;
+}
+
+/* =========================
+   LAYOUT
+========================= */
+
+.contact-body{
+  display: grid;
+  grid-template-columns: 1fr 280px;
+  gap: 100px;
+  align-items: start;
+}
+
+/* =========================
+   FORMULARIO
+========================= */
+
+.contact-form{
+  display: flex;
+  flex-direction: column;
+  gap: 50px;
+}
+
+/* CAMPO */
+.field{
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.field label{
+  font-size: 10px;
+  letter-spacing: 3px;
+  color: var(--label-inactive);
+  transition: color 0.3s;
+}
+
+.field:focus-within label{
+  color: var(--text-primary);
+}
+
+.field input,
+.field textarea{
+  background: none;
+  border: none;
+  outline: none;
+  color: var(--text-primary);
+  font-family: 'Roboto', sans-serif;
+  font-size: 13px;
+  letter-spacing: 1px;
+  padding: 6px 0;
+  resize: none;
+  width: 100%;
+}
+
+.field textarea{
+  line-height: 1.8;
+}
+
+/* línea inferior */
+.field-line{
+  display: block;
+  height: 1px;
+  background: var(--border-field);
+  position: relative;
+  overflow: hidden;
+}
+
+.field-line::after{
+  content: "";
+  position: absolute;
+  left: -100%;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: var(--text-primary);
+  transition: left 0.4s ease;
+}
+
+.field:focus-within .field-line::after{
+  left: 0;
+}
+
+/* placeholder */
+.field input::placeholder,
+.field textarea::placeholder{
+  color: #333;
+  font-size: 12px;
+}
+
+/* =========================
+   BOTÓN ENVIAR
+========================= */
+
+.contact-submit{
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: none;
+  border: 1px solid var(--border-btn);
+  color: var(--text-primary);
+  font-family: 'Roboto', sans-serif;
+  font-size: 11px;
+  letter-spacing: 3px;
+  padding: 16px 30px;
+  cursor: pointer;
+  width: fit-content;
+  transition: 0.35s ease;
+  margin-top: 10px;
+}
+
+.contact-submit:hover{
+  border-color: var(--text-primary);
+  background: var(--overlay-btn-hover-bg);
+}
+
+.btn-arrow{
+  transition: transform 0.35s ease;
+}
+
+.contact-submit:hover .btn-arrow{
+  transform: translateX(5px);
+}
+
+/* estado enviando */
+.contact-submit.sending{
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+/* =========================
+   ESTADO DEL FORMULARIO
+========================= */
+
+.form-status{
+  margin-top: 30px;
+  font-size: 11px;
+  letter-spacing: 2px;
+  min-height: 20px;
+  transition: opacity 0.3s;
+}
+
+.form-status.success{
+  color: var(--form-success);
+}
+
+.form-status.error{
+  color: var(--form-error);
+}
+
+/* =========================
+   INFO LATERAL
+========================= */
+
+.contact-info{
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  padding-top: 6px;
+
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeUp 0.8s ease 0.3s forwards;
+}
+
+.info-block{
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.info-label{
+  font-size: 10px;
+  letter-spacing: 3px;
+  color: var(--label-inactive);
+}
+
+.info-value{
+  font-size: 12px;
+  letter-spacing: 1px;
+  color: var(--text-muted-1);
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+a.info-value:hover{
+  color: var(--text-primary);
+}
+
+/* =========================
+   ANIMACIÓN ENTRADA
+========================= */
+
+@keyframes fadeUp{
+  to{
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.contact-form .field{
+  opacity: 0;
+  transform: translateY(16px);
+  animation: fadeUp 0.6s ease forwards;
+}
+
+.contact-form .field:nth-child(1){ animation-delay: 0.05s; }
+.contact-form .field:nth-child(2){ animation-delay: 0.12s; }
+.contact-form .field:nth-child(3){ animation-delay: 0.19s; }
+.contact-form .field:nth-child(4){ animation-delay: 0.26s; }
+
+.contact-submit{
+  opacity: 0;
+  animation: fadeUp 0.6s ease 0.33s forwards;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 900px){
+  .contact{
+    padding: 100px 30px;
+  }
+
+  .contact-body{
+    grid-template-columns: 1fr;
+    gap: 60px;
+  }
+
+  .main{
+    margin-left: 0;
+  }
+}

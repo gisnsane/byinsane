@@ -1,0 +1,107 @@
+/* BASE */
+body{
+  background: var(--bg-dark);
+  color: var(--text-primary);
+  font-family:'Roboto',sans-serif;
+}
+
+.logo{
+  margin-bottom:10px;
+}
+
+.nav-top{
+  display:flex;
+  flex-direction:column;
+  align-items:flex-start;
+  gap:20px;
+}
+
+.menu-toggle{
+  background:none;
+  border:none;
+  cursor:pointer;
+  display:flex;
+  flex-direction:column;
+  gap:5px;
+}
+
+.menu-toggle span{
+  width:16px;
+  height:1px;
+  background: var(--color-logo);
+  display:block;
+}
+
+/* 👉 activar contenedor en biografía */
+.sidenav .nav-links{
+  opacity:1 !important;
+  transform:translateY(0) !important;
+  pointer-events:auto !important;
+}
+
+.nav-links{
+  list-style:none;
+  display:flex;
+  flex-direction:column;
+  gap:25px;
+  margin-top:40px;
+}
+
+/* ocultar items */
+.nav-links li{
+  opacity:0;
+  transform:translateY(-10px);
+  pointer-events:none;
+  transition:0.3s;
+}
+
+/* nav abierto */
+.sidenav.active .nav-links li{
+  opacity:1;
+  transform:translateY(0);
+  pointer-events:auto;
+}
+
+/* excepción: biografía visible */
+.nav-links li.always-visible{
+  opacity:1;
+  transform:translateY(0);
+  pointer-events:auto;
+}
+
+.sidenav.active .nav-links{
+  opacity:1;
+  transform:translateY(0);
+  pointer-events:auto;
+}
+
+/* MAIN */
+.main{
+  margin-left: 220px;
+  min-height:100vh;
+  background: var(--bg-main-light);
+  color: var(--text-dark);
+  padding:120px 80px;
+}
+
+/* BIO */
+.bio-container{
+  max-width:700px;
+}
+
+/* TITULO */
+.bio-title{
+  font-size:14px;
+  letter-spacing:4px;
+  margin-bottom:40px;
+  color: var(--text-dark);
+  opacity:0.6;
+}
+
+/* TEXTO */
+.bio-text{
+  font-size:16px;
+  line-height:1.9;
+  color: var(--text-body);
+  max-width:700px;
+}
