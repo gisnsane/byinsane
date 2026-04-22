@@ -15,8 +15,8 @@ document.addEventListener("DOMContentLoaded", () => {
      👉 Agrega o quita rutas aquí para cambiar las fotos
   ================================================= */
   const IMAGES = [
-    "img/landing/DSC08286-Mejorado-NR-2.jpg",
-    "img/landing/foto2.jpg",
+    "img/landing/landing-1.jpg",
+    "img/landing/landing-2.jpg",
     /* "img/landing/foto3.jpg", */
   ];
 
