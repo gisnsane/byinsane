@@ -15,9 +15,9 @@ document.addEventListener("DOMContentLoaded", () => {
      👉 Agrega o quita rutas aquí para cambiar las fotos
   ================================================= */
   const IMAGES = [
-    "IMG/Landing/DSC08286-Mejorado-NR-2.jpg",
-    "IMG/Landing/foto2.jpg",
-    /* "IMG/Landing/foto3.jpg", */
+    "img/landing/DSC08286-Mejorado-NR-2.jpg",
+    "img/landing/foto2.jpg",
+    /* "img/landing/foto3.jpg", */
   ];
 
   const INTERVAL = 5000;   /* tiempo entre fotos en ms (5000 = 5 seg) */

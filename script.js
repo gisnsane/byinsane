@@ -18,8 +18,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const closeBtn      = document.getElementById("viewer-close");
   const nextProjectBtn = document.getElementById("next");
   const prevProjectBtn = document.getElementById("prev");
-  const nextImgBtn     = document.getElementById("img-next");
-  const prevImgBtn     = document.getElementById("img-prev");
+  const nextimgBtn     = document.getElementById("img-next");
+  const previmgBtn     = document.getElementById("img-prev");
 
   let currentProject = 0;
   let currentSlide   = 0;
@@ -48,7 +48,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   /* ================= HELPERS ================= */
-  function getViewerImg() { return viewerContent.querySelector("img"); }
+  function getViewerimg() { return viewerContent.querySelector("img"); }
 
   function buildSlides(p) {
     const result = [];
@@ -154,7 +154,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const currentP = projects[currentProject];
       const altText = currentP?.dataset?.title || "";
       viewerContent.innerHTML = `<img src="${slide.src}" alt="${altText}" style="cursor:zoom-in;">`;
-      const img = getViewerImg();
+      const img = getViewerimg();
       if (img) img.addEventListener("click", (e) => { e.stopPropagation(); openZoom(); });
     }
 
@@ -235,10 +235,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function openZoom() {
     if (isZoomed) return;
-    const viewerImg = getViewerImg();
-    if (!viewerImg) return;
+    const viewerimg = getViewerimg();
+    if (!viewerimg) return;
     isZoomed = true; zoomScale = 1; zoomX = 0; zoomY = 0;
-    const clone = viewerImg.cloneNode();
+    const clone = viewerimg.cloneNode();
     clone.id = "zoomed-img";
     clone.style.cssText = `
       position:fixed; top:50%; left:50%;
@@ -304,15 +304,15 @@ document.addEventListener("DOMContentLoaded", () => {
   projects.forEach((p, i) => p.addEventListener("click", () => openProject(i)));
   nextProjectBtn?.addEventListener("click", nextProject);
   prevProjectBtn?.addEventListener("click", prevProject);
-  nextImgBtn?.addEventListener("click", nextSlide);
-  prevImgBtn?.addEventListener("click", prevSlide);
+  nextimgBtn?.addEventListener("click", nextSlide);
+  previmgBtn?.addEventListener("click", prevSlide);
   closeBtn?.addEventListener("click", closeViewer);
 
   // Fix 9: aria-labels para accesibilidad
   nextProjectBtn?.setAttribute("aria-label", "Proyecto siguiente");
   prevProjectBtn?.setAttribute("aria-label", "Proyecto anterior");
-  nextImgBtn?.setAttribute("aria-label", "Imagen siguiente");
-  prevImgBtn?.setAttribute("aria-label", "Imagen anterior");
+  nextimgBtn?.setAttribute("aria-label", "Imagen siguiente");
+  previmgBtn?.setAttribute("aria-label", "Imagen anterior");
   closeBtn?.setAttribute("aria-label", "Cerrar");
 
   document.addEventListener("keydown", (e) => {
