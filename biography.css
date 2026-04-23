@@ -105,3 +105,101 @@ body{
   color: var(--text-body);
   max-width:700px;
 }
+
+/* =============================================
+   RESPONSIVE — TOP BAR EN MÓVIL (<= 768px)
+   Desktop no cambia absolutamente nada.
+============================================= */
+@media (max-width: 768px){
+
+  /* Sidenav → top bar horizontal fija */
+  .sidenav{
+    width: 100%;
+    height: 56px;
+    min-height: 56px;
+    flex-direction: row;
+    align-items: center;
+    padding: 0;
+    border-right: none;
+    border-bottom: 1px solid var(--border-subtle);
+    overflow: hidden;
+    gap: 0;
+    justify-content: flex-start;
+  }
+
+  /* Ocultar hamburguesa */
+  .menu-toggle{
+    display: none;
+  }
+
+  /* nav-top (logo): mismo flex que cada link, siempre primero a la izquierda */
+  .nav-top{
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+    flex: 1;
+  }
+
+  /* Logo: mismo tamaño visual que los links */
+  .logo{
+    margin-bottom: 0;
+    font-size: 9px;
+    letter-spacing: 1.5px;
+    text-align: center;
+    white-space: nowrap;
+  }
+
+  /* nav-links: display:contents sube los li al nivel del sidenav para que order funcione */
+  .nav-links{
+    display: contents;
+  }
+
+  /* Cada li: flex item directo del sidenav */
+  .nav-links li{
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 1 !important;
+    transform: none !important;
+    pointer-events: auto !important;
+  }
+
+  .nav-links a{
+    font-size: 9px;
+    letter-spacing: 1.5px;
+    text-align: center;
+    white-space: nowrap;
+  }
+
+  /* Orden fijo en móvil: INSANE · BIOGRAPHY · PROJECTS · EXHIBITIONS · CONTACT
+     El HTML de biografia.html tiene: BIOGRAPHY(1º) PROJECTS(2º) EXHIBITIONS(3º) CONTACT(4º)
+     El logo (.nav-top) ocupa order:1, los links van del 2 al 5 */
+  .nav-top{ order: 1 !important; }
+  .nav-links li:nth-child(1){ order: 2 !important; } /* BIOGRAPHY  */
+  .nav-links li:nth-child(2){ order: 3 !important; } /* PROJECTS   */
+  .nav-links li:nth-child(3){ order: 4 !important; } /* EXHIBITIONS*/
+  .nav-links li:nth-child(4){ order: 5 !important; } /* CONTACT    */
+
+  .main{
+    margin-left: 0;
+    padding: 76px 24px 60px;
+    min-height: 100vh;
+  }
+
+  .bio-container{
+    max-width: 100%;
+  }
+
+  .bio-title{
+    font-size: 12px;
+    letter-spacing: 3px;
+    margin-bottom: 24px;
+  }
+
+  .bio-text{
+    font-size: 15px;
+    line-height: 1.8;
+  }
+}

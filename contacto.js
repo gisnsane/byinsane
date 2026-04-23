@@ -4,11 +4,39 @@ document.addEventListener("DOMContentLoaded", () => {
   const toggle = document.getElementById("menu-toggle");
   const sidenav = document.getElementById("sidenav");
 
+  let overlay = document.getElementById("nav-overlay");
+  if (!overlay) {
+    overlay = document.createElement("div");
+    overlay.id = "nav-overlay";
+    overlay.className = "nav-overlay";
+    document.body.appendChild(overlay);
+  }
+
+  function openNav() {
+    sidenav.classList.add("active");
+    overlay.classList.add("visible");
+    document.body.style.overflow = "hidden";
+  }
+
+  function closeNav() {
+    sidenav.classList.remove("active");
+    overlay.classList.remove("visible");
+    document.body.style.overflow = "";
+  }
+
   if (toggle && sidenav) {
     toggle.addEventListener("click", () => {
-      sidenav.classList.toggle("active");
+      sidenav.classList.contains("active") ? closeNav() : openNav();
     });
   }
+
+  overlay.addEventListener("click", closeNav);
+
+  sidenav?.querySelectorAll("a").forEach(link => {
+    link.addEventListener("click", () => {
+      if (window.innerWidth <= 768) closeNav();
+    });
+  });
 
   /* ================= FORMULARIO ================= */
 

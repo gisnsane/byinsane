@@ -3,9 +3,42 @@ document.addEventListener("DOMContentLoaded", () => {
   /* ================= NAV ================= */
   const toggle  = document.getElementById("menu-toggle");
   const sidenav = document.getElementById("sidenav");
-  if (toggle && sidenav) {
-    toggle.addEventListener("click", () => sidenav.classList.toggle("active"));
+
+  /* Overlay para móvil: se crea una sola vez y se reutiliza */
+  let overlay = document.getElementById("nav-overlay");
+  if (!overlay) {
+    overlay = document.createElement("div");
+    overlay.id = "nav-overlay";
+    overlay.className = "nav-overlay";
+    document.body.appendChild(overlay);
   }
+
+  function openNav() {
+    sidenav.classList.add("active");
+    overlay.classList.add("visible");
+    document.body.style.overflow = "hidden";
+  }
+
+  function closeNav() {
+    sidenav.classList.remove("active");
+    overlay.classList.remove("visible");
+    document.body.style.overflow = "";
+  }
+
+  if (toggle && sidenav) {
+    toggle.addEventListener("click", () => {
+      sidenav.classList.contains("active") ? closeNav() : openNav();
+    });
+  }
+
+  overlay.addEventListener("click", closeNav);
+
+  /* Cerrar nav al hacer clic en un link (útil en móvil) */
+  sidenav?.querySelectorAll("a").forEach(link => {
+    link.addEventListener("click", () => {
+      if (window.innerWidth <= 768) closeNav();
+    });
+  });
 
   /* ============== PROJECTS ============== */
   const projects = document.querySelectorAll(".project");
@@ -150,12 +183,15 @@ document.addEventListener("DOMContentLoaded", () => {
       });
 
     } else {
-      // Fix 8: alt con título del proyecto actual
       const currentP = projects[currentProject];
       const altText = currentP?.dataset?.title || "";
-      viewerContent.innerHTML = `<img src="${slide.src}" alt="${altText}" style="cursor:zoom-in;">`;
+      const isMobile = window.innerWidth <= 768;
+      // En móvil: sin zoom, cursor normal. En desktop: zoom habilitado.
+      viewerContent.innerHTML = `<img src="${slide.src}" alt="${altText}" style="cursor:${isMobile ? 'default' : 'zoom-in'};">`;
       const img = getViewerimg();
-      if (img) img.addEventListener("click", (e) => { e.stopPropagation(); openZoom(); });
+      if (img && !isMobile) {
+        img.addEventListener("click", (e) => { e.stopPropagation(); openZoom(); });
+      }
     }
 
     updateMiniControls();
@@ -164,7 +200,27 @@ document.addEventListener("DOMContentLoaded", () => {
   function updateMiniControls() {
     const miniControls = document.querySelector(".viewer-controls-mini");
     if (!miniControls) return;
-    miniControls.style.display = slides.length > 1 ? "flex" : "none";
+    const isMobile = window.innerWidth <= 768;
+    const hasMultiple = slides.length > 1;
+
+    miniControls.style.display = hasMultiple ? "flex" : "none";
+
+    if (isMobile) {
+      /* En móvil las flechas viven en el VIEWER (no en viewerContent)
+         así el innerHTML nunca las puede destruir. El CSS las posiciona
+         encima de la imagen via position:absolute en el viewer. */
+      miniControls.style.opacity = "1";
+      miniControls.style.pointerEvents = hasMultiple ? "auto" : "none";
+      if (miniControls.parentElement !== viewer) {
+        viewer.appendChild(miniControls);
+      }
+    } else {
+      miniControls.style.opacity = "";
+      miniControls.style.pointerEvents = "";
+      if (miniControls.parentElement !== viewer) {
+        viewer.appendChild(miniControls);
+      }
+    }
   }
 
   /* ================= OPEN PROJECT ================= */
@@ -235,6 +291,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function openZoom() {
     if (isZoomed) return;
+    if (window.innerWidth <= 768) return;  /* Sin zoom en móvil */
     const viewerimg = getViewerimg();
     if (!viewerimg) return;
     isZoomed = true; zoomScale = 1; zoomX = 0; zoomY = 0;
@@ -322,6 +379,20 @@ document.addEventListener("DOMContentLoaded", () => {
     if (e.key === "ArrowRight") { e.shiftKey ? nextProject() : nextSlide(); }
     if (e.key === "ArrowLeft")  { e.shiftKey ? prevProject() : prevSlide(); }
   });
+
+  /* ================= SWIPE TÁCTIL (móvil) ================= */
+  let touchStartX = 0, touchStartY = 0;
+  viewer.addEventListener("touchstart", (e) => {
+    touchStartX = e.touches[0].clientX;
+    touchStartY = e.touches[0].clientY;
+  }, { passive: true });
+  viewer.addEventListener("touchend", (e) => {
+    const dx = e.changedTouches[0].clientX - touchStartX;
+    const dy = e.changedTouches[0].clientY - touchStartY;
+    if (Math.abs(dx) < 40 || Math.abs(dy) > Math.abs(dx)) return; // ignorar taps y scroll vertical
+    if (dx < 0) nextSlide();
+    else        prevSlide();
+  }, { passive: true });
 
   /* ================= PROJECT INFO HOVER ================= */
   projects.forEach(p => {

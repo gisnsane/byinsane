@@ -230,3 +230,89 @@ body.home{
   margin-left: auto;
   margin-right: auto;
 }
+
+/* =============================================
+   RESPONSIVE — TOP BAR EN MÓVIL (<= 768px)
+   Desktop no cambia absolutamente nada.
+============================================= */
+@media (max-width: 768px){
+
+  /* Sidenav → top bar horizontal fija */
+  .sidenav{
+    width: 100%;
+    height: 56px;
+    min-height: 56px;
+    flex-direction: row;
+    align-items: center;
+    padding: 0;
+    border-right: none;
+    border-bottom: 1px solid var(--border-subtle);
+    overflow: hidden;
+    gap: 0;
+    justify-content: flex-start;
+  }
+
+  /* Ocultar hamburguesa */
+  .menu-toggle{
+    display: none;
+  }
+
+  /* nav-top (logo): mismo flex que cada link, siempre primero a la izquierda */
+  .nav-top{
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+    flex: 1;
+  }
+
+  /* Logo: mismo tamaño visual que los links */
+  .logo{
+    margin-bottom: 0;
+    font-size: 9px;
+    letter-spacing: 1.5px;
+    text-align: center;
+    white-space: nowrap;
+  }
+
+  /* nav-links: display:contents sube los li al nivel del sidenav para que order funcione */
+  .nav-links{
+    display: contents;
+  }
+
+  /* Cada li: flex item directo del sidenav */
+  .nav-links li{
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 1 !important;
+    transform: none !important;
+    pointer-events: auto !important;
+  }
+
+  .nav-links a{
+    font-size: 9px;
+    letter-spacing: 1.5px;
+    text-align: center;
+    white-space: nowrap;
+  }
+
+  /* Main: sin margin-left, con padding-top por el top bar */
+  .main{
+    margin-left: 0;
+    padding-top: 56px;
+    height: 100vh;
+  }
+
+  /* Hero title escala en móvil */
+  .hero-title{
+    font-size: clamp(44px, 14vw, 90px);
+    letter-spacing: 5px;
+  }
+
+  .hero-desc{
+    font-size: 12px;
+    padding: 0 20px;
+  }
+}
