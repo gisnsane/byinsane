@@ -116,4 +116,51 @@ document.addEventListener("DOMContentLoaded", () => {
   firstImg.onerror = startSlideshow; /* arrancar igual aunque falle */
   firstImg.src = IMAGES[0];
 
+
+  /* =====================================================
+     PRELOAD ESPECULATIVO — Projects & Exhibitions thumbs
+     Se ejecuta en segundo plano mientras el usuario está
+     en la landing page, para que al navegar a projects o
+     exhibitions las imágenes ya estén en caché del browser
+     y la animación se vea completamente fluida.
+     requestIdleCallback garantiza que no compite con el
+     slideshow ni con ninguna interacción del usuario.
+  ===================================================== */
+  const THUMBS_TO_PRELOAD = [
+    "img/proyectos/lucy/lucy-1-thumb.webp",
+    "img/proyectos/alex/alex-1-thumb.webp",
+    "img/proyectos/akira/akira-1-thumb.webp",
+    "img/proyectos/ad/ad-1-thumb.webp",
+    "img/proyectos/emilio/emilio-1-thumb.webp",
+    "img/proyectos/cri/cri-1-thumb.webp",
+    "img/proyectos/aptbs/aptbs-1-thumb.webp",
+    "img/proyectos/hds/hds-1-thumb.webp",
+    "img/exhibitions/photopolis/photopolis-1-thumb.webp",
+    "img/exhibitions/ruido/ruido-1-thumb.webp",
+    "img/exhibitions/klpa/klpa-1-thumb.webp",
+  ];
+
+  function speculativePreload(srcs) {
+    let i = 0;
+    function loadNext(deadline) {
+      while (i < srcs.length && (deadline.timeRemaining() > 4 || deadline.didTimeout)) {
+        new Image().src = srcs[i++];
+      }
+      if (i < srcs.length) {
+        requestIdleCallback(loadNext, { timeout: 2000 });
+      }
+    }
+    /* Esperar 1.5s para no competir con la primera imagen del slideshow */
+    setTimeout(() => {
+      if ("requestIdleCallback" in window) {
+        requestIdleCallback(loadNext, { timeout: 2000 });
+      } else {
+        /* Fallback para Safari */
+        srcs.forEach((src, idx) => setTimeout(() => { new Image().src = src; }, idx * 150));
+      }
+    }, 1500);
+  }
+
+  speculativePreload(THUMBS_TO_PRELOAD);
+
 });

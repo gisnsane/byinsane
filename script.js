@@ -16,7 +16,7 @@ document.addEventListener("DOMContentLoaded", () => {
   function openNav() {
     sidenav.classList.add("active");
     overlay.classList.add("visible");
-    document.body.style.overflow = "hidden";
+    if (window.innerWidth <= 768) document.body.style.overflow = "hidden";
   }
 
   function closeNav() {
@@ -402,97 +402,161 @@ document.addEventListener("DOMContentLoaded", () => {
     p.appendChild(info);
   });
 
-  /* ================= LOADER + SCROLL REVEAL ================= */
+  /* ================= LOADER + SCROLL REVEAL =================
+     DISEÑO: el loader vive en el HTML (proyectos.html / exposiciones.html),
+     no se crea con JS. Esto evita el problema del bfcache donde
+     DOMContentLoaded no se re-dispara al volver con el botón Atrás,
+     dejando un loader creado-por-JS huérfano en el DOM.
 
-  /* — Crear loader en el DOM — */
-  const loader = document.createElement("div");
-  loader.id = "page-loader";
-  loader.innerHTML = `
-    <div class="loader-bar-wrap">
-      <div class="loader-bar" id="loader-bar"></div>
-    </div>
-  `;
-  document.body.appendChild(loader);
+     FLUJO:
+     1. El HTML ya tiene #page-loader visible desde el primer byte.
+     2. El JS lo encuentra, anima la barra, y lo destruye cuando las
+        imágenes están listas (o tras el fallback).
+     3. Si el elemento no existe (página sin loader) se salta todo.
+  ================= */
 
+  const loader    = document.getElementById("page-loader");
   const loaderBar = document.getElementById("loader-bar");
 
-  /* Solo vigilamos las 3 primeras para el loader —
-     las demás se precargan en segundo plano sin bloquear la barra */
-  const allImgs      = Array.from(projects).map(p => p.querySelector("img")).filter(Boolean);
-  const firstRowImgs = allImgs.slice(0, 3);
-  const restImgs     = allImgs.slice(3);
-
-  const total    = firstRowImgs.length;
-  let loaded     = 0;
-  let loaderDone = false;
-
-  function onFirstRowLoad() {
-    loaded++;
-    const pct = Math.round((loaded / total) * 100);
-    loaderBar.style.width = pct + "%";
-    if (loaded >= total) hideLoader();
+  /* Si esta página no tiene loader en el HTML, saltar directo al reveal */
+  if (!loader || !loaderBar) {
+    revealFirstRow();
+  } else {
+    runLoader();
   }
 
-  function hideLoader() {
-    if (loaderDone) return;
-    loaderDone = true;
-    clearTimeout(loaderTimeout);
-    setTimeout(() => {
-      loader.classList.add("done");
-      loader.addEventListener("transitionend", () => {
-        loader.remove();
-        revealFirstRow();
-        /* Precargar filas 2+ en segundo plano una vez que el loader desaparece */
-        preloadRest();
-      }, { once: true });
-    }, 200);
+  function runLoader() {
+    const allImgs      = Array.from(projects).map(p => p.querySelector("img")).filter(Boolean);
+    const firstRowImgs = allImgs.slice(0, 3);
+    const restImgs     = allImgs.slice(3);
+    const total        = firstRowImgs.length;
+    let loaded         = 0;
+    let loaderDone     = false;
+
+    /* Tiempo mínimo que se muestra el loader aunque todo esté en caché.
+       1500ms da tiempo a apreciar la barra y la entrada a la página. */
+    const MIN_LOADER_MS = 1000;
+    const loaderStart   = Date.now();
+
+    /* Fallback duro: si en 4s no terminó, forzar cierre */
+    const loaderTimeout = setTimeout(() => hideLoader(), 4000);
+
+    /* Barra arranca en 10% de inmediato para dar feedback visual */
+    requestAnimationFrame(() => { loaderBar.style.width = "10%"; });
+
+    function onImgReady() {
+      loaded++;
+      loaderBar.style.width = Math.round((loaded / total) * 100) + "%";
+      if (loaded >= total) hideLoader();
+    }
+
+    function hideLoader() {
+      if (loaderDone) return;
+      /* Respetar el tiempo mínimo: si las imágenes cargaron muy rápido
+         (caché) esperamos el tiempo restante antes de ocultar el loader */
+      const elapsed   = Date.now() - loaderStart;
+      const remaining = Math.max(0, MIN_LOADER_MS - elapsed);
+      if (remaining > 0) {
+        setTimeout(() => _doHideLoader(), remaining);
+        return;
+      }
+      _doHideLoader();
+    }
+
+    function _doHideLoader() {
+      if (loaderDone) return;
+      loaderDone = true;
+      clearTimeout(loaderTimeout);
+
+      loaderBar.style.width = "100%";
+
+      /* pointer-events none de inmediato: la página es usable aunque
+         la animación de fade no haya terminado todavía */
+      loader.style.pointerEvents = "none";
+
+      /* Pequeña pausa para que el 100% sea visible antes del fade */
+      setTimeout(() => {
+        loader.classList.add("done");
+
+        let removed = false;
+        function doRemove() {
+          if (removed) return;
+          removed = true;
+          loader.remove();
+          revealFirstRow();
+          preloadRest(restImgs);
+        }
+        /* Doble garantía: transitionend o timeout */
+        loader.addEventListener("transitionend", doRemove, { once: true });
+        setTimeout(doRemove, 800);
+      }, 120);
+    }
+
+    if (total === 0) {
+      hideLoader();
+    } else {
+      firstRowImgs.forEach(img => {
+        /* Imagen ya en caché y decodificada */
+        if (img.complete && img.naturalWidth > 0) {
+          onImgReady();
+        /* Imagen en caché pero no decodificada aún (Chrome/Safari con bfcache) */
+        } else if (img.complete && typeof img.decode === "function") {
+          img.decode().then(onImgReady).catch(onImgReady);
+        /* Imagen aún descargando */
+        } else {
+          img.addEventListener("load",  onImgReady, { once: true });
+          img.addEventListener("error", onImgReady, { once: true });
+        }
+      });
+    }
   }
 
-  /* Precargar imágenes restantes de forma escalonada para no saturar
-     el ancho de banda mientras carga la primera fila */
-  function preloadRest() {
+  /* Precargar imágenes restantes de forma escalonada */
+  function preloadRest(restImgs) {
     restImgs.forEach((img, i) => {
       setTimeout(() => {
         if (!img.complete || img.naturalWidth === 0) {
-          const tmp = new Image();
-          tmp.src = img.src;
+          new Image().src = img.src;
         }
       }, i * 80);
     });
   }
 
-  /* Arrancar barra en 10% de inmediato */
-  requestAnimationFrame(() => { loaderBar.style.width = "10%"; });
-
-  /* Escuchar carga de la primera fila */
-  firstRowImgs.forEach(img => {
-    if (img.complete && img.naturalWidth > 0) {
-      onFirstRowLoad();
-    } else {
-      img.addEventListener("load",  onFirstRowLoad, { once: true });
-      img.addEventListener("error", onFirstRowLoad, { once: true });
-    }
-  });
-
-  /* Fallback: máximo 3s */
-  const loaderTimeout = setTimeout(hideLoader, 3000);
-
-  /* — Animación escalonada de la primera fila — */
+  /* — Animación escalonada de la primera fila —
+     Cada tarjeta sale una por una (izquierda → centro → derecha)
+     con 280ms entre cada una para que la cascada sea claramente visible.
+     El delay base de 200ms deja que el fade-out del loader termine primero. */
   function revealFirstRow() {
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => {
-        projects.forEach((p, i) => {
-          if (i < 3) {
-            setTimeout(() => p.classList.add("visible"), 80 + i * 180);
-          }
-        });
-      });
+    projects.forEach((p, i) => {
+      if (i >= 3) return;
+      setTimeout(() => animateIn(p), 200 + i * 280);
     });
   }
 
-  /* — Scroll reveal para el resto —
-     Siempre espera que la imagen esté cargada antes de animar */
+  /* Función central de animación.
+     void el.offsetHeight fuerza un reflow que obliga al browser a pintar
+     el estado inicial (opacity:0 + translateY) antes de agregar .visible.
+     Sin esto el browser puede colapsar ambos estados en un frame y
+     saltarse la transición completamente. */
+  function animateIn(el) {
+    el.classList.add("will-animate");
+    void el.offsetHeight;
+    requestAnimationFrame(() => el.classList.add("visible"));
+  }
+
+  /* — Scroll reveal para filas 2+ —
+     Las imágenes de filas siguientes se pre-cargan en segundo plano
+     (ver preloadRest) para que estén listas cuando el usuario baja.
+     El observer espera a que el elemento haya entrado 80px en el
+     viewport antes de disparar — así el usuario YA lo está viendo
+     cuando empieza la animación, no antes. */
   const projectsArr = Array.from(projects);
+
+  /* Agrupamos los proyectos por fila (de 3 en 3) para animarlos
+     juntos con un pequeño escalonado interno por columna */
+  function getRowAndCol(idx) {
+    return { row: Math.floor(idx / 3), col: idx % 3 };
+  }
 
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
@@ -501,22 +565,37 @@ document.addEventListener("DOMContentLoaded", () => {
       const idx = projectsArr.indexOf(project);
 
       if (idx < 3) { observer.unobserve(project); return; }
+      observer.unobserve(project);
 
+      const { col } = getRowAndCol(idx);
       const img = project.querySelector("img");
 
-      function reveal() {
-        requestAnimationFrame(() => project.classList.add("visible"));
-        observer.unobserve(project);
+      /* Escalonado por columna dentro de la misma fila:
+         col 0 → 0ms, col 1 → 120ms, col 2 → 240ms
+         Así cada fila se anima en cascada izquierda→derecha igual que la primera */
+      const colDelay = col * 120;
+
+      function doAnimate() {
+        setTimeout(() => animateIn(project), colDelay);
       }
 
       if (!img || (img.complete && img.naturalWidth > 0)) {
-        requestAnimationFrame(reveal);
+        doAnimate();
       } else {
-        img.addEventListener("load",  reveal, { once: true });
-        img.addEventListener("error", reveal, { once: true });
+        img.addEventListener("load",  doAnimate, { once: true });
+        img.addEventListener("error", doAnimate, { once: true });
+        /* Fallback: si la imagen tarda más de 1.5s, animar igual */
+        setTimeout(() => {
+          if (!project.classList.contains("visible")) doAnimate();
+        }, 1500);
       }
     });
-  }, { threshold: 0.15 });
+  }, {
+    /* -80px: el elemento debe haber entrado 80px al viewport para disparar.
+       El usuario ya lo está mirando cuando arranca la animación. */
+    rootMargin: "0px 0px -80px 0px",
+    threshold: 0
+  });
 
   projects.forEach(p => observer.observe(p));
 

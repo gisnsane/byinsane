@@ -114,5 +114,15 @@ This work was selected as a finalist in the Kuala Lumpur International Photo Awa
   </section>
 </main>
 
+
+<!-- LOADER: en el HTML para que sea visible desde el primer byte.
+     El JS lo encuentra y lo destruye cuando las imágenes están listas.
+     NO se crea con JS para evitar problemas con el bfcache del navegador. -->
+<div id="page-loader">
+  <div class="loader-bar-wrap">
+    <div class="loader-bar" id="loader-bar"></div>
+  </div>
+</div>
+
 </body>
 </html>
