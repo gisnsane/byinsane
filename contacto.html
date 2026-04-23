@@ -3,13 +3,18 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Contacto — INSANE</title>
+<title>INSANE — Contact</title>
 
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
- <link rel="stylesheet" href="global.css">
+
+<link rel="stylesheet" href="global.css">
 <link rel="stylesheet" href="index.css">
 <link rel="stylesheet" href="contacto.css">
 <link rel="icon" href="/img/global/logo.ico?v=2">
+
+<script defer src="contacto.js"></script>
 </head>
 
 <body>
@@ -20,30 +25,19 @@
   <div class="nav-top">
     <a href="index.html" class="logo">INSANE</a>
 
-    <button class="menu-toggle" id="menu-toggle">
+    <button class="menu-toggle" id="menu-toggle" aria-label="Abrir menú" aria-expanded="false">
       <span></span>
       <span></span>
     </button>
   </div>
 
   <ul class="nav-links">
-
     <li class="always-visible" style="order:1">
-      <a class="active" href="#">CONTACT</a>
+      <a class="active" href="#" aria-current="page">CONTACT</a>
     </li>
-
-    <li style="order:2">
-      <a href="biografia.html">BIOGRAPHY</a>
-    </li>
-
-    <li style="order:3">
-      <a href="proyectos.html">PROJECTS</a>
-    </li>
-
-    <li style="order:4">
-      <a href="exposiciones.html">EXHIBITIONS</a>
-    </li>
-
+    <li style="order:2"><a href="biografia.html">BIOGRAPHY</a></li>
+    <li style="order:3"><a href="proyectos.html">PROJECTS</a></li>
+    <li style="order:4"><a href="exposiciones.html">EXHIBITIONS</a></li>
   </ul>
 
 </nav>
@@ -60,17 +54,17 @@
 
       <!-- FORMULARIO -->
       <div class="contact-form-wrap">
-        <form class="contact-form" id="contact-form">
+        <form class="contact-form" id="contact-form" novalidate>
 
           <div class="field">
             <label for="name">NAME</label>
-            <input type="text" id="name" name="name" autocomplete="off" required>
+            <input type="text" id="name" name="name" autocomplete="name" required>
             <span class="field-line"></span>
           </div>
 
           <div class="field">
             <label for="email">EMAIL</label>
-            <input type="email" id="email" name="email" autocomplete="off" required>
+            <input type="email" id="email" name="email" autocomplete="email" required>
             <span class="field-line"></span>
           </div>
 
@@ -88,24 +82,23 @@
 
           <button type="submit" class="contact-submit" id="submit-btn">
             <span class="btn-text">SEND</span>
-            <span class="btn-arrow">→</span>
+            <span class="btn-arrow" aria-hidden="true">→</span>
           </button>
 
         </form>
 
-        <!-- Estado de envío -->
-        <div class="form-status" id="form-status"></div>
+        <div class="form-status" id="form-status" role="status" aria-live="polite"></div>
       </div>
 
       <!-- INFO LATERAL -->
       <div class="contact-info">
         <div class="info-block">
           <span class="info-label">EMAIL</span>
-          <a href="mailto:contacto@insane.com" class="info-value">gisnsane@gmail.com</a>
+          <a href="mailto:gisnsane@gmail.com" class="info-value">gisnsane@gmail.com</a>
         </div>
         <div class="info-block">
           <span class="info-label">INSTAGRAM</span>
-          <a href="https://instagram.com/" target="_blank" class="info-value">@gisnsane</a>
+          <a href="https://instagram.com/gisnsane" target="_blank" rel="noopener noreferrer" class="info-value">@gisnsane</a>
         </div>
         <div class="info-block">
           <span class="info-label">LOCATION</span>
@@ -118,6 +111,5 @@
   </section>
 </main>
 
-<script src="contacto.js"></script>
 </body>
 </html>

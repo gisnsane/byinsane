@@ -1,7 +1,7 @@
 document.addEventListener("DOMContentLoaded", () => {
 
   /* ================= NAV ================= */
-  const toggle = document.getElementById("menu-toggle");
+  const toggle  = document.getElementById("menu-toggle");
   const sidenav = document.getElementById("sidenav");
 
   let overlay = document.getElementById("nav-overlay");
@@ -16,12 +16,14 @@ document.addEventListener("DOMContentLoaded", () => {
     sidenav.classList.add("active");
     overlay.classList.add("visible");
     document.body.style.overflow = "hidden";
+    toggle?.setAttribute("aria-expanded", "true");
   }
 
   function closeNav() {
     sidenav.classList.remove("active");
     overlay.classList.remove("visible");
     document.body.style.overflow = "";
+    toggle?.setAttribute("aria-expanded", "false");
   }
 
   if (toggle && sidenav) {
@@ -42,76 +44,76 @@ document.addEventListener("DOMContentLoaded", () => {
      SLIDESHOW DE FONDO
      👉 Agrega o quita rutas aquí para cambiar las fotos
   ================================================= */
-  const IMAGES = [
+  const IMAGES   = [
     "img/landing/landing-1.jpg",
     "img/landing/landing-2.jpg",
     /* "img/landing/foto3.jpg", */
   ];
 
-  const INTERVAL = 5000;   /* tiempo entre fotos en ms (5000 = 5 seg) */
-  const OVERLAY  = "rgba(0, 0, 0, 0.20), rgba(0,0,0,0.85)"; /* oscuridad del overlay */
+  const INTERVAL = 5000;  /* ms entre fotos */
+  const OVERLAY  = "rgba(0, 0, 0, 0.20), rgba(0,0,0,0.85)";
 
-  /* ---- si solo hay una imagen no hace falta slideshow ---- */
   if (IMAGES.length === 0) return;
 
   const body = document.body;
   let current = 0;
 
-  /* crear dos capas para hacer crossfade suave */
-  function createLayer(src) {
+  /* ── OPTIMIZACIÓN: crear ambas capas una sola vez y reutilizarlas ──
+     En lugar de crear/destruir un div en cada ciclo (causa reflow y
+     garbage collection), alternamos entre dos capas fijas. */
+  function createLayer(src, visible) {
     const div = document.createElement("div");
-    div.className = "bg-layer";
+    div.className = "bg-layer" + (visible ? " visible" : "");
     div.style.backgroundImage = `linear-gradient(${OVERLAY}), url('${src}')`;
+    /* OPTIMIZACIÓN: hint al compositor para que prepare la capa en GPU */
+    div.style.willChange = "opacity";
     body.appendChild(div);
     return div;
   }
 
-  /* precargar todas las imágenes antes de arrancar */
-  let loaded = 0;
-  const cache = [];
-
   function startSlideshow() {
     if (IMAGES.length === 1) {
-      /* solo una imagen, ponerla y ya */
-      createLayer(IMAGES[0]).classList.add("visible");
+      createLayer(IMAGES[0], true);
       return;
     }
 
-    /* capa activa inicial */
-    let activeLayer = createLayer(IMAGES[0]);
-    activeLayer.classList.add("visible");
+    /* Crear ambas capas desde el inicio */
+    let layerA = createLayer(IMAGES[0], true);
+    let layerB = createLayer(IMAGES[1], false);
+
+    /* Precargar el resto de imágenes (si hay más de 2) */
+    for (let i = 2; i < IMAGES.length; i++) {
+      const img = new Image();
+      img.src = IMAGES[i];
+    }
 
     setInterval(() => {
       current = (current + 1) % IMAGES.length;
+      const next = (current + 1) % IMAGES.length;
 
-      const nextLayer = createLayer(IMAGES[current]);
+      /* La capa inactiva recibe la imagen siguiente antes de mostrarse */
+      layerB.style.backgroundImage = `linear-gradient(${OVERLAY}), url('${IMAGES[current]}')`;
 
-      /* pequeño delay para que el navegador pinte el elemento antes de animar */
+      /* Precargar la que vendrá después */
+      const preload = new Image();
+      preload.src = IMAGES[next];
+
+      /* Intercambiar visibilidad — solo cambia opacity, sin reflow */
       requestAnimationFrame(() => {
-        requestAnimationFrame(() => {
-          nextLayer.classList.add("visible");
-          activeLayer.classList.remove("visible");
-
-          /* eliminar capa vieja después de la transición */
-          const old = activeLayer;
-          setTimeout(() => old.remove(), 1200);
-
-          activeLayer = nextLayer;
-        });
+        layerB.classList.add("visible");
+        layerA.classList.remove("visible");
+        /* Rotar referencias */
+        [layerA, layerB] = [layerB, layerA];
       });
 
     }, INTERVAL);
   }
 
-  /* precargar imágenes y arrancar cuando estén listas */
-  IMAGES.forEach(src => {
-    const img = new Image();
-    img.onload = img.onerror = () => {
-      loaded++;
-      if (loaded === IMAGES.length) startSlideshow();
-    };
-    img.src = src;
-    cache.push(img);
-  });
+  /* Precargar primera imagen (ya fue declarada con <link rel="preload">
+     en el HTML, pero la tenemos aquí también como fallback) */
+  const firstImg = new Image();
+  firstImg.onload = startSlideshow;
+  firstImg.onerror = startSlideshow; /* arrancar igual aunque falle */
+  firstImg.src = IMAGES[0];
 
 });

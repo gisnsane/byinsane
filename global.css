@@ -1,67 +1,69 @@
 /* ============================================================
-   GLOBAL.CSS — Variables de color globales
+   GLOBAL.CSS — Variables + resets de performance
    Importa este archivo PRIMERO en cada HTML de tu proyecto
    ============================================================ */
 
 :root {
 
- --font-logo:  700;   /* Bold */
-  --font-title: 400;   /* Bold */
-    
+  --font-logo:  700;
+  --font-title: 400;
+
   /* ─── FONDOS ─────────────────────────────────────────── */
-  --bg-dark:          #050505;   /* fondo principal oscuro (body, nav, viewer, sections) */
-  --bg-main-light:    #ffffff;   /* fondo sección biography (.main) */
-  --bg-nav-border:    #111111;   /* borde derecho del sidenav */
+  --bg-dark:          #050505;
+  --bg-main-light:    #ffffff;
+  --bg-nav-border:    #111111;
 
   /* ─── TEXTOS ─────────────────────────────────────────── */
-  --color-logo:     hsl(54, 100%, 53%);   /* texto logos y cruz */
-  --text-primary:     #ffffff;   /* texto principal sobre fondos oscuros */
-  --text-dark:        #000000;   /* texto sobre fondos claros (biography) */
-  --text-body:        #222222;   /* cuerpo de texto en biography */
-  --text-muted-1:     #888888;   /* descripción hero, info lateral */
-  --text-muted-2:     #777777;   /* subtítulos de sección, viewer-text p */
-  --text-muted-3:     #666666;   /* links del nav sin hover */
-  --text-muted-4:     #aaaaaa;   /* viewer-text color base */
+  --color-logo:     hsl(54, 100%, 53%);
+  --text-primary:     #ffffff;
+  --text-dark:        #000000;
+  --text-body:        #222222;
+  --text-muted-1:     #888888;
+  --text-muted-2:     #777777;
+  --text-muted-3:     #666666;
+  --text-muted-4:     #aaaaaa;
 
   /* ─── BORDES / LÍNEAS ─────────────────────────────────── */
-  --border-subtle:    #111111;   /* borde sidenav */
-  --border-field:     #1a1a1a;   /* línea inferior de campos del form */
-  --border-btn:       #222222;   /* borde botón enviar (estado normal) */
+  --border-subtle:    #111111;
+  --border-field:     #1a1a1a;
+  --border-btn:       #222222;
 
   /* ─── LABELS / ÍCONOS ────────────────────────────────── */
-  --label-inactive:   #444444;   /* labels de campos, info-label */
+  --label-inactive:   #444444;
 
   /* ─── SCROLLBAR ──────────────────────────────────────── */
   --scrollbar-thumb:          rgba(255, 255, 255, 0.10);
   --scrollbar-thumb-hover:    rgba(255, 255, 255, 0.25);
 
   /* ─── OVERLAYS / TRANSPARENCIAS ──────────────────────── */
-  --overlay-gradient:         rgba(0, 0, 0, 0.60);   /* gradiente hover sobre .project */
-  --overlay-zoom-bg:          rgba(0, 0, 0, 0.92);   /* fondo zoom-overlay */
+  --overlay-gradient:         rgba(0, 0, 0, 0.60);
+  --overlay-zoom-bg:          rgba(0, 0, 0, 0.92);
   --overlay-viewer-btn-bg:    rgba(255, 255, 255, 0.06);
   --overlay-viewer-btn-hover: rgba(255, 255, 255, 0.12);
-  --overlay-btn-hover-bg:     rgba(255, 255, 255, 0.04); /* hover botón enviar */
+  --overlay-btn-hover-bg:     rgba(255, 255, 255, 0.04);
 
   /* ─── ESTADO DE FORMULARIO ───────────────────────────── */
-  --form-success:     #aaaaaa;   /* mensaje enviado con éxito */
-  --form-error:       #c0392b;   /* mensaje de error */
+  --form-success:     #aaaaaa;
+  --form-error:       #c0392b;
 
   /* ─── GRILLA DE FONDO (hero grid) ───────────────────── */
-  --hero-grid-color:  #111111;   /* líneas decorativas del hero */
-
+  --hero-grid-color:  #111111;
 }
 
-
 /* ============================================================
-   CÓMO CAMBIAR EL TEMA DE COLOR
+   PERFORMANCE — scroll suave nativo, sin janks
+   ============================================================ */
+html {
+  scroll-behavior: smooth;
+  /* Evita reflow al mostrar/ocultar scrollbar en algunos OS */
+  scrollbar-gutter: stable;
+}
 
-   Solo edita las variables de arriba en :root y todos
-   los archivos que usen este global.css se actualizarán.
-
-   Ejemplo para un tema claro:
-   :root {
-     --bg-dark:       #f5f5f5;
-     --text-primary:  #000000;
-     ...
-   }
-============================================================ */
+/* Mejora rendering de imágenes */
+img {
+  /* Evita que imágenes sin dimensiones explícitas causen layout shift */
+  max-width: 100%;
+  height: auto;
+  /* Renderizado de alta calidad sin sacrificar performance */
+  image-rendering: auto;
+}

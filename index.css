@@ -9,6 +9,8 @@ body{
   font-family:'Roboto',sans-serif;
   color: var(--text-primary);
   background: var(--bg-dark);
+  /* Scroll nativo del sistema operativo — más suave en móvil y trackpad */
+  -webkit-overflow-scrolling: touch;
 }
 
 ::-webkit-scrollbar {
@@ -62,6 +64,10 @@ body.home{
   border-right:1px solid var(--border-subtle);
   background: var(--bg-dark);
   z-index:10;
+  /* Promueve el nav a su propia capa GPU — al hacer scroll en el main
+     el navegador no tiene que repintar el nav en cada frame */
+  will-change: transform;
+  transform: translateZ(0);
 }
 
 .nav-top{

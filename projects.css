@@ -204,8 +204,9 @@
 }
 
 body.viewer-open .projects-grid{
-  filter:blur(8px);
-  opacity:0.3;
+  /* blur() eliminado — era el elemento más costoso en GPU.
+     El fade + scale dan el mismo efecto de "retroceso" sin repaint. */
+  opacity:0.15;
   transform:scale(0.98);
 }
 
@@ -220,6 +221,11 @@ body.viewer-open .projects-grid{
   opacity:0;
   transform:translateY(40px);
   transition:0.8s ease;
+  /* Promueve cada tarjeta a su propia capa en GPU.
+     El navegador no tiene que repintar las demás al hacer scroll. */
+  will-change: transform, opacity;
+  /* Evita que el overflow:hidden + transform causen repaint en scroll */
+  isolation: isolate;
 }
 
 .project.visible{
@@ -234,16 +240,19 @@ body.viewer-open .projects-grid{
   object-fit:cover;
   cursor:pointer;
   display:block;
+  /* filter estático está bien — no se anima, no causa jank */
   filter:grayscale(15%) contrast(1.05);
-  transition:1s cubic-bezier(0.2, 0.8, 0.2, 1);
+  transition: transform 1s cubic-bezier(0.2, 0.8, 0.2, 1),
+              opacity 1s cubic-bezier(0.2, 0.8, 0.2, 1);
+  will-change: transform, opacity;
 }
 
-/* HOVER SUTIL (tipo galería) */
+/* HOVER — solo transform y opacity (ambas en GPU, nunca bloquean el scroll) */
 .project:hover img{
-  will-change:transform;
   transform:scale(1.05);
-  filter:grayscale(0%) contrast(1.1);
-  opacity:0.9;
+  opacity:0.85;
+  /* filter eliminado del hover: grayscale/contrast animan en CPU
+     y pueden causar jank al hacer scroll mientras hay hover activo */
 }
 
 .viewer-text{
@@ -482,14 +491,12 @@ body.viewer-open .projects-grid{
   max-height:80vh;
   object-fit:contain;
   display:block;
-
+  /* filter estático OK, eliminamos la transición de filter */
   filter:contrast(1.05) brightness(0.95);
-  transition:filter 0.6s ease;
 }
 
-.viewer-content:hover video{
-  filter:contrast(1.1) brightness(1);
-}
+/* eliminado: .viewer-content:hover video con transition:filter
+   — animaba filter en CPU innecesariamente */
 
 /* =========================
    BOTONES SVG (mute, fullscreen)
@@ -783,4 +790,42 @@ body.viewer-open .projects-grid{
     text-align: left;
     padding: 0 4px;
   }
+}
+
+/* =========================
+   PAGE LOADER
+========================= */
+
+#page-loader{
+  position: fixed;
+  inset: 0;
+  background: var(--bg-dark);
+  z-index: 2000;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding-bottom: 48px;
+  pointer-events: none;
+  /* fade out al añadir .done */
+  transition: opacity 0.7s ease;
+}
+
+#page-loader.done{
+  opacity: 0;
+}
+
+.loader-bar-wrap{
+  width: 120px;
+  height: 1px;
+  background: rgba(255,255,255,0.08);
+  position: relative;
+  overflow: hidden;
+}
+
+.loader-bar{
+  height: 100%;
+  width: 0%;
+  background: var(--text-primary);
+  transition: width 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  box-shadow: 0 0 8px rgba(255,255,255,0.3);
 }

@@ -402,22 +402,121 @@ document.addEventListener("DOMContentLoaded", () => {
     p.appendChild(info);
   });
 
-  /* ================= SCROLL REVEAL ================= */
+  /* ================= LOADER + SCROLL REVEAL ================= */
+
+  /* — Crear loader en el DOM — */
+  const loader = document.createElement("div");
+  loader.id = "page-loader";
+  loader.innerHTML = `
+    <div class="loader-bar-wrap">
+      <div class="loader-bar" id="loader-bar"></div>
+    </div>
+  `;
+  document.body.appendChild(loader);
+
+  const loaderBar = document.getElementById("loader-bar");
+
+  /* Solo vigilamos las 3 primeras para el loader —
+     las demás se precargan en segundo plano sin bloquear la barra */
+  const allImgs      = Array.from(projects).map(p => p.querySelector("img")).filter(Boolean);
+  const firstRowImgs = allImgs.slice(0, 3);
+  const restImgs     = allImgs.slice(3);
+
+  const total    = firstRowImgs.length;
+  let loaded     = 0;
+  let loaderDone = false;
+
+  function onFirstRowLoad() {
+    loaded++;
+    const pct = Math.round((loaded / total) * 100);
+    loaderBar.style.width = pct + "%";
+    if (loaded >= total) hideLoader();
+  }
+
+  function hideLoader() {
+    if (loaderDone) return;
+    loaderDone = true;
+    clearTimeout(loaderTimeout);
+    setTimeout(() => {
+      loader.classList.add("done");
+      loader.addEventListener("transitionend", () => {
+        loader.remove();
+        revealFirstRow();
+        /* Precargar filas 2+ en segundo plano una vez que el loader desaparece */
+        preloadRest();
+      }, { once: true });
+    }, 200);
+  }
+
+  /* Precargar imágenes restantes de forma escalonada para no saturar
+     el ancho de banda mientras carga la primera fila */
+  function preloadRest() {
+    restImgs.forEach((img, i) => {
+      setTimeout(() => {
+        if (!img.complete || img.naturalWidth === 0) {
+          const tmp = new Image();
+          tmp.src = img.src;
+        }
+      }, i * 80);
+    });
+  }
+
+  /* Arrancar barra en 10% de inmediato */
+  requestAnimationFrame(() => { loaderBar.style.width = "10%"; });
+
+  /* Escuchar carga de la primera fila */
+  firstRowImgs.forEach(img => {
+    if (img.complete && img.naturalWidth > 0) {
+      onFirstRowLoad();
+    } else {
+      img.addEventListener("load",  onFirstRowLoad, { once: true });
+      img.addEventListener("error", onFirstRowLoad, { once: true });
+    }
+  });
+
+  /* Fallback: máximo 3s */
+  const loaderTimeout = setTimeout(hideLoader, 3000);
+
+  /* — Animación escalonada de la primera fila — */
+  function revealFirstRow() {
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        projects.forEach((p, i) => {
+          if (i < 3) {
+            setTimeout(() => p.classList.add("visible"), 80 + i * 180);
+          }
+        });
+      });
+    });
+  }
+
+  /* — Scroll reveal para el resto —
+     Siempre espera que la imagen esté cargada antes de animar */
+  const projectsArr = Array.from(projects);
+
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
       if (!entry.isIntersecting) return;
       const project = entry.target;
+      const idx = projectsArr.indexOf(project);
+
+      if (idx < 3) { observer.unobserve(project); return; }
+
       const img = project.querySelector("img");
-      if (!img) { project.classList.add("visible"); observer.unobserve(project); return; }
-      if (img.complete && img.naturalWidth > 0) {
-        project.classList.add("visible");
-      } else {
-        img.addEventListener("load",  () => project.classList.add("visible"), { once: true });
-        img.addEventListener("error", () => project.classList.add("visible"), { once: true });
+
+      function reveal() {
+        requestAnimationFrame(() => project.classList.add("visible"));
+        observer.unobserve(project);
       }
-      observer.unobserve(project);
+
+      if (!img || (img.complete && img.naturalWidth > 0)) {
+        requestAnimationFrame(reveal);
+      } else {
+        img.addEventListener("load",  reveal, { once: true });
+        img.addEventListener("error", reveal, { once: true });
+      }
     });
-  }, { threshold: 0.1 });
+  }, { threshold: 0.15 });
 
   projects.forEach(p => observer.observe(p));
 
