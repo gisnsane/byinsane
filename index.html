@@ -5,24 +5,17 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>INSANE</title>
 
-<!-- PERFORMANCE: preconectar a Google Fonts antes de que el parser llegue al link -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-
-<!-- PERFORMANCE: font-display=swap evita FOIT (texto invisible mientras carga la fuente) -->
 <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
 
-<link rel="stylesheet" href="global.css">
-<link rel="stylesheet" href="index.css">
+<link rel="stylesheet" href="/global.css">
+<link rel="stylesheet" href="/index.css">
 <link rel="icon" href="/img/global/logo.ico?v=2">
 
-<!-- PERFORMANCE: precargar las imágenes del slideshow para que estén listas
-     al arrancar el JS. Agrega/quita <link rel="preload"> según tus imágenes. -->
 <link rel="preload" as="image" href="https://res.cloudinary.com/dkicubwax/image/upload/w_1200,q_auto,f_auto/v1777000095/landing-1_q6fqnb.webp">
-<!-- <link rel="preload" as="image" href="https://res.cloudinary.com/dkicubwax/image/upload/w_1200,q_auto,f_auto/v1777000095/landing-2_s7wd87.webp"> -->
 
-<!-- PERFORMANCE: script con defer → no bloquea el render del HTML -->
-<script defer src="index.js"></script>
+<script defer src="/index.js"></script>
 </head>
 
 <body class="home">
@@ -31,7 +24,7 @@
 <nav class="sidenav active" id="sidenav">
 
   <div class="nav-top">
-    <a href="index.html" class="logo">INSANE</a>
+    <a href="/" class="logo">INSANE</a>
 
     <button class="menu-toggle" id="menu-toggle" aria-label="Abrir menú" aria-expanded="true">
       <span></span>
@@ -40,10 +33,10 @@
   </div>
 
   <ul class="nav-links">
-    <li><a href="biografia.html">BIOGRAPHY</a></li>
-    <li><a href="proyectos.html">PROJECTS</a></li>
-    <li><a href="exposiciones.html">EXHIBITIONS</a></li>
-    <li><a href="contacto.html">CONTACT</a></li>
+    <li><a href="/biography/">BIOGRAPHY</a></li>
+    <li><a href="/projects/">PROJECTS</a></li>
+    <li><a href="/exhibitions/">EXHIBITIONS</a></li>
+    <li><a href="/contact/">CONTACT</a></li>
   </ul>
 
 </nav>

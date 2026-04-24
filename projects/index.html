@@ -9,12 +9,12 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
 
-<link rel="stylesheet" href="global.css">
-<link rel="stylesheet" href="index.css">
-<link rel="stylesheet" href="projects.css">
+<link rel="stylesheet" href="/global.css">
+<link rel="stylesheet" href="/index.css">
+<link rel="stylesheet" href="./projects.css">
 <link rel="icon" href="/img/global/logo.ico?v=2">
 
-<script defer src="script.js"></script>
+<script defer src="/script.js"></script>
 </head>
 
 <body>
@@ -23,7 +23,7 @@
 <nav class="sidenav" id="sidenav">
 
   <div class="nav-top">
-    <a href="index.html" class="logo">INSANE</a>
+    <a href="/" class="logo">INSANE</a>
 
     <button class="menu-toggle" id="menu-toggle" aria-label="Abrir menú" aria-expanded="false">
       <span></span>
@@ -35,9 +35,9 @@
     <li class="always-visible" style="order:1">
       <a class="active" href="#" aria-current="page">PROJECTS</a>
     </li>
-    <li style="order:2"><a href="exposiciones.html">EXHIBITIONS</a></li>
-    <li style="order:3"><a href="contacto.html">CONTACT</a></li>
-    <li style="order:4"><a href="biografia.html">BIOGRAPHY</a></li>
+    <li style="order:2"><a href="/exhibitions/">EXHIBITIONS</a></li>
+    <li style="order:3"><a href="/contact/">CONTACT</a></li>
+    <li style="order:4"><a href="/biography/">BIOGRAPHY</a></li>
   </ul>
 
 </nav>
@@ -52,12 +52,6 @@
 
     <div class="projects-grid">
 
-      <!-- PERFORMANCE: la primera imagen de la grilla es la única
-           above-the-fold. fetchpriority="high" le dice al navegador
-           que la descargue antes que cualquier otra cosa.
-           Las demás usan loading="lazy" + decoding="async" para no
-           bloquear el hilo principal mientras decodifican. -->
-
       <div class="project"
         data-title="LUCY NORIEGA - 2026"
         data-desc="A personal photographic project, developed from my own family experience.
@@ -65,7 +59,6 @@ The work begins with the figure of a great-aunt as an entry point for an explora
 More than simply recording a history, the project observes how family dynamics are activated in the everyday and in the domestic space, and how the image can approach those layers of memory, affection, and distance that coexist within the same house."
         data-images="https://res.cloudinary.com/dkicubwax/image/upload/w_800,q_auto,f_auto/v1777000076/lucy-1_thjbv3.webp|https://res.cloudinary.com/dkicubwax/image/upload/w_800,q_auto,f_auto/v1777000076/lucy-2_fobiur.webp|https://res.cloudinary.com/dkicubwax/image/upload/w_800,q_auto,f_auto/v1777000077/lucy-3_oap0uc.webp|https://res.cloudinary.com/dkicubwax/image/upload/w_800,q_auto,f_auto/v1777000078/lucy-4_mefksz.webp|https://res.cloudinary.com/dkicubwax/image/upload/w_800,q_auto,f_auto/v1777000081/lucy-5_d50qtp.webp"
         data-video="https://res.cloudinary.com/dkicubwax/video/upload/v1777000081/lucy-video-1_bigx8d.mp4">
-        <!-- Primera imagen: carga eager + alta prioridad para evitar LCP tardío -->
         <img src="https://res.cloudinary.com/dkicubwax/image/upload/w_400,q_auto,f_auto/v1777000074/lucy-1-thumb_ikb7vo.webp"
              alt="Lucy Noriega project"
              fetchpriority="high"
@@ -137,7 +130,7 @@ The images are situated in this transition between the personal and the performa
 
       <div class="project"
         data-title="HIJOS DEL SOL - IN PROGRESS"
-        data-desc=""Hijos del sol" is an ongoing photographic project, inspired by images captured throughout Lima and the various places I travel to in Peru. Through these records, a personal perspective on the territory is constructed, where each scene connects landscapes, moments, and ways of inhabiting the same shared space."
+        data-desc="“Hijos del sol” is an ongoing photographic project, inspired by images captured throughout Lima and the various places I travel to in Peru. Through these records, a personal perspective on the territory is constructed, where each scene connects landscapes, moments, and ways of inhabiting the same shared space."
         data-images="https://res.cloudinary.com/dkicubwax/image/upload/w_800,q_auto,f_auto/v1776999907/hds-1_d3gmxy.webp|https://res.cloudinary.com/dkicubwax/image/upload/w_800,q_auto,f_auto/v1776999907/hds-2_owj3yj.webp|https://res.cloudinary.com/dkicubwax/image/upload/w_800,q_auto,f_auto/v1776999908/hds-3_q3p5fx.webp|https://res.cloudinary.com/dkicubwax/image/upload/w_800,q_auto,f_auto/v1776999955/hds-4_uxc047.webp|https://res.cloudinary.com/dkicubwax/image/upload/w_800,q_auto,f_auto/v1777000082/hds-5_y8jf1v.webp">
         <img loading="lazy" decoding="async"
              src="https://res.cloudinary.com/dkicubwax/image/upload/w_400,q_auto,f_auto/v1776999904/hds-1-thumb_dragdp.webp"
@@ -172,10 +165,6 @@ The images are situated in this transition between the personal and the performa
   </section>
 </main>
 
-
-<!-- LOADER: en el HTML para que sea visible desde el primer byte.
-     El JS lo encuentra y lo destruye cuando las imágenes están listas.
-     NO se crea con JS para evitar problemas con el bfcache del navegador. -->
 <div id="page-loader">
   <div class="loader-bar-wrap">
     <div class="loader-bar" id="loader-bar"></div>

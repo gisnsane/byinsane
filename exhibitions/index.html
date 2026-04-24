@@ -9,12 +9,12 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;700;900&display=swap" rel="stylesheet">
 
-<link rel="stylesheet" href="global.css">
-<link rel="stylesheet" href="index.css">
-<link rel="stylesheet" href="exposiciones.css">
+<link rel="stylesheet" href="/global.css">
+<link rel="stylesheet" href="/index.css">
+<link rel="stylesheet" href="./exhibitions.css">
 <link rel="icon" href="/img/global/logo.ico?v=2">
 
-<script defer src="script.js"></script>
+<script defer src="/script.js"></script>
 </head>
 
 <body>
@@ -23,7 +23,7 @@
 <nav class="sidenav" id="sidenav">
 
   <div class="nav-top">
-    <a href="index.html" class="logo">INSANE</a>
+    <a href="/" class="logo">INSANE</a>
 
     <button class="menu-toggle" id="menu-toggle" aria-label="Abrir menú" aria-expanded="false">
       <span></span>
@@ -35,9 +35,9 @@
     <li class="always-visible" style="order:1">
       <a class="active" href="#" aria-current="page">EXHIBITIONS</a>
     </li>
-    <li style="order:2"><a href="contacto.html">CONTACT</a></li>
-    <li style="order:3"><a href="biografia.html">BIOGRAPHY</a></li>
-    <li style="order:4"><a href="proyectos.html">PROJECTS</a></li>
+    <li style="order:2"><a href="/contact/">CONTACT</a></li>
+    <li style="order:3"><a href="/biography/">BIOGRAPHY</a></li>
+    <li style="order:4"><a href="/projects/">PROJECTS</a></li>
   </ul>
 
 </nav>
@@ -54,7 +54,7 @@
 
       <div class="project"
         data-title="PHOTOPOLIS - HOME-S - GREECE 2026"
-        data-desc=""HOME-S" is a group photography exhibition presented at the Kapralos Museum in Agrinio, Greece, bringing together 212 photographers from 38 countries. Through diverse cultural and personal perspectives, the exhibition explores the idea of ​​"home" as an open and multifaceted condition, where images move between the familiar and the strange, presence and absence, and the various ways of belonging."
+        data-desc="“HOME-S” is a group photography exhibition presented at the Kapralos Museum in Agrinio, Greece, bringing together 212 photographers from 38 countries. Through diverse cultural and personal perspectives, the exhibition explores the idea of ​​“home” as an open and multifaceted condition, where images move between the familiar and the strange, presence and absence, and the various ways of belonging."
         data-images="https://res.cloudinary.com/dkicubwax/image/upload/w_800,q_auto,f_auto/v1777000083/photopolis-1_rhyasm.webp|https://res.cloudinary.com/dkicubwax/image/upload/w_800,q_auto,f_auto/v1777000083/photopolis-2_pjlwgz.webp|https://res.cloudinary.com/dkicubwax/image/upload/w_800,q_auto,f_auto/v1777000084/photopolis-3_kd5abx.webp"
         data-video="">
         <img src="https://res.cloudinary.com/dkicubwax/image/upload/w_400,q_auto,f_auto/v1777000081/photopolis-1-thumb_rpyhp5.webp"
@@ -66,7 +66,7 @@
 
       <div class="project"
         data-title="RUIDO - POEMAS DE LA CALLE - PERU 2026"
-        data-desc=""Poemas de la calle" This street photography exhibition, held at Ruido and co-organized with Street Photography Peru (SPP), brings together the work of 43 national and international photographers. The exhibition offers a visual journey through the city via diverse perspectives that capture the everyday, the unexpected, and the urban, revealing multiple ways of inhabiting and observing public space in the country."
+        data-desc="“Poemas de la calle” This street photography exhibition, held at Ruido and co-organized with Street Photography Peru (SPP), brings together the work of 43 national and international photographers. The exhibition offers a visual journey through the city via diverse perspectives that capture the everyday, the unexpected, and the urban, revealing multiple ways of inhabiting and observing public space in the country."
         data-images="https://res.cloudinary.com/dkicubwax/image/upload/w_800,q_auto,f_auto/v1777000088/ruido-1_itygn2.webp|https://res.cloudinary.com/dkicubwax/image/upload/w_800,q_auto,f_auto/v1777000086/ruido-2_f0qmfo.webp|https://res.cloudinary.com/dkicubwax/image/upload/w_800,q_auto,f_auto/v1777000087/ruido-3_imig6p.webp|https://res.cloudinary.com/dkicubwax/image/upload/w_800,q_auto,f_auto/v1777000089/ruido-4_ejmg7u.webp"
         data-video="https://res.cloudinary.com/dkicubwax/video/upload/v1777000093/ruido-video-1_xehyft.mp4">
         <img loading="lazy" decoding="async"
@@ -114,10 +114,6 @@ This work was selected as a finalist in the Kuala Lumpur International Photo Awa
   </section>
 </main>
 
-
-<!-- LOADER: en el HTML para que sea visible desde el primer byte.
-     El JS lo encuentra y lo destruye cuando las imágenes están listas.
-     NO se crea con JS para evitar problemas con el bfcache del navegador. -->
 <div id="page-loader">
   <div class="loader-bar-wrap">
     <div class="loader-bar" id="loader-bar"></div>
