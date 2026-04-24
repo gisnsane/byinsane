@@ -77,7 +77,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const p = projects[i];
     const cover = p.querySelector("img")?.src;
     if (cover) preloadImage(cover);
-    if (p.dataset.images) p.dataset.images.split(",").map(s => s.trim()).filter(Boolean).forEach(preloadImage);
+    if (p.dataset.images) p.dataset.images.split("|").map(s => s.trim()).filter(Boolean).forEach(preloadImage);
   }
 
   /* ================= HELPERS ================= */
@@ -86,7 +86,7 @@ document.addEventListener("DOMContentLoaded", () => {
   function buildSlides(p) {
     const result = [];
     if (p.dataset.images) {
-      p.dataset.images.split(",").map(s => s.trim()).filter(Boolean).forEach(src => result.push({ type: "image", src }));
+      p.dataset.images.split("|").map(s => s.trim()).filter(Boolean).forEach(src => result.push({ type: "image", src }));
     } else {
       const cover = p.querySelector("img")?.src;
       if (cover) result.push({ type: "image", src: cover });
@@ -310,6 +310,33 @@ document.addEventListener("DOMContentLoaded", () => {
     `;
     document.body.appendChild(clone);
     zoomOverlay.classList.add("active");
+
+    /* ── ALTA RESOLUCIÓN EN ZOOM ──────────────────────────────────────
+       Reemplaza la URL de Cloudinary por una versión w_2400,q_100,f_auto
+       para que al hacer zoom 6x la imagen se vea completamente nítida.
+       La imagen w_800 se muestra primero (instantánea) y cuando la
+       versión HQ termina de cargar se hace un crossfade suave al clone.
+       Solo aplica a URLs de Cloudinary; imágenes locales sin cambio.
+    ──────────────────────────────────────────────────────────────────── */
+    const currentSrc = clone.src || clone.currentSrc || "";
+    const hqSrc = currentSrc.includes("res.cloudinary.com")
+      ? currentSrc.replace(/\/w_\d+,q_[^/]+,f_[^/]+\//, "/w_2400,q_100,f_auto/")
+      : null;
+
+    if (hqSrc && hqSrc !== currentSrc) {
+      const hqImg = new Image();
+      hqImg.onload = () => {
+        const still = document.getElementById("zoomed-img");
+        if (!still) return;
+        still.style.transition = "opacity 0.25s ease";
+        still.style.opacity = "0";
+        requestAnimationFrame(() => {
+          still.src = hqSrc;
+          still.style.opacity = "1";
+        });
+      };
+      hqImg.src = hqSrc;
+    }
 
     clone.addEventListener("wheel", (e) => {
       e.preventDefault();
