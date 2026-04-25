@@ -44,10 +44,15 @@ document.addEventListener("DOMContentLoaded", () => {
      SLIDESHOW DE FONDO
      👉 Agrega o quita rutas aquí para cambiar las fotos
   ================================================= */
-  const IMAGES   = [
-    "img/landing/landing-1.jpg",
-    "img/landing/landing-2.jpg",
-    /* "img/landing/foto3.jpg", */
+  /* En móvil servimos imágenes más pequeñas (w_900) para no
+     descargar 3MB en una pantalla de 390px. En desktop w_1600. */
+  const isMobile = window.innerWidth <= 768;
+  const cld      = "https://res.cloudinary.com/dkicubwax/image/upload";
+  const params   = isMobile ? "w_900,q_auto,f_auto" : "w_1600,q_auto,f_auto";
+
+  const IMAGES = [
+    `${cld}/${params}/v1777000095/landing-1_q6fqnb.webp`,
+    `${cld}/${params}/v1777000094/landing-2_lzcpje.jpg`,
   ];
 
   const INTERVAL = 5000;  /* ms entre fotos */
