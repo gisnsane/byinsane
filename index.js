@@ -48,7 +48,7 @@ document.addEventListener("DOMContentLoaded", () => {
      descargar 3MB en una pantalla de 390px. En desktop w_1600. */
   const isMobile = window.innerWidth <= 768;
   const cld      = "https://res.cloudinary.com/dkicubwax/image/upload";
-  const params   = isMobile ? "w_900,q_auto,f_auto" : "w_1600,q_auto,f_auto";
+  const params   = isMobile ? "w_1400,q_auto,f_auto" : "w_1600,q_auto,f_auto";
 
   const IMAGES = [
     `${cld}/${params}/v1777000095/landing-1_q6fqnb.webp`,
