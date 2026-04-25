@@ -462,7 +462,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     /* Tiempo mínimo que se muestra el loader aunque todo esté en caché.
        1500ms da tiempo a apreciar la barra y la entrada a la página. */
-    const MIN_LOADER_MS = 1000;
+    const MIN_LOADER_MS = window.innerWidth <= 768 ? 400 : 1000;
     const loaderStart   = Date.now();
 
     /* Fallback duro: si en 4s no terminó, forzar cierre */
